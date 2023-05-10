@@ -3,7 +3,7 @@
 
 In this repository, you will find code samples for each chapter of the book. The book mentions the name of each file, which corresponds to the respective file in this repository.
 
-### Chapters 
+### Chapters  
 
-- Chapter 01: Introduction 
-- Chapter 02: The Basics of Zig
+- [Chapter 01: Introduction](https://github.com/MKProj/ZigUnleashed/tree/main/ch01)  
+- [Chapter 02: The Basics](https://github.com/MKProj/ZigUnleashed/tree/main/ch02)  
