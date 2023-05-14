@@ -1,0 +1,3 @@
+[submodule "ch02/our_lib/zig-parse-number"]
+	path = ch02/our_lib/zig-parse-number
+	url = https://github.com/winksaville/zig-parse-number

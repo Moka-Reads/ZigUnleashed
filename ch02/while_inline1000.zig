@@ -1,7 +1,6 @@
 const std = @import("std");
 const print = std.debug.print;
 const Insant = std.time.Instant;
-
 pub fn main() !void {
     // get the current time
     const now = try Insant.now();
