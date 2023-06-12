@@ -8,15 +8,15 @@ CC = clang
 CC+ = g++
 RUSTC = rustc
 compile_c: 
-	$(foreach file, $(C), \
+	$(foreach file, $(C_FILES), \
 		$(eval out=$(patsubst %.c,%_c,$(file))) \
 		$(CC) $(file) -o $(out);)
 compile_cpp: 
-	$(foreach file, $(CPP), \
+	$(foreach file, $(CPP_FILES), \
 		$(eval out=$(patsubst %.cpp,%_cpp,$(file))) \
 		$(CC+) $(file) -o $(out);)
 compile_rs: 
-	$(foreach file, $(RS), \
+	$(foreach file, $(RS_FILES), \
 		$(eval out=$(patsubst %.rs,%_rs,$(file))) \
 		$(RUSTC) $(file) -o $(out);)
 compile_zig: 

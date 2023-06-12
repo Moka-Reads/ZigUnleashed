@@ -4,7 +4,7 @@ ZIG_TEST_FILES = exercises/exercise1.zig exercises/exercise2.zig exercises/exerc
 
 CC = clang
 compile_c: 
-	$(foreach file, $(C), \
+	$(foreach file, $(C_FILES), \
 		$(eval out=$(patsubst %.c,%_c,$(file))) \
 		$(CC) $(file) -o $(out);)
 compile_zig: 

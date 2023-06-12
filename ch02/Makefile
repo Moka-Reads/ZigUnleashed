@@ -6,11 +6,11 @@ ZIG_TEST_FILES = exercises/user_manifesto.txt
 CC = clang
 RUSTC = rustc
 compile_c: 
-	$(foreach file, $(C), \
+	$(foreach file, $(C_FILES), \
 		$(eval out=$(patsubst %.c,%_c,$(file))) \
 		$(CC) $(file) -o $(out);)
 compile_rs: 
-	$(foreach file, $(RS), \
+	$(foreach file, $(RS_FILES), \
 		$(eval out=$(patsubst %.rs,%_rs,$(file))) \
 		$(RUSTC) $(file) -o $(out);)
 compile_zig: 
