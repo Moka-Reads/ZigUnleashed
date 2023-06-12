@@ -1,7 +1,12 @@
 const std = @import("std");
 
 pub fn main() !void {
-    const arr = .{ 1, 2, 3, 4 };
-    std.debug.print("Array: {any}\n", .{arr});
-    std.debug.print("Array Info: {any}\n", .{@typeName(arr)});
+    // Implicitly declared array with explicit type
+    const numbers: [4]i32 = .{ 1, 2, 3, 4 };
+
+    // Implicitly declared array with inferred type
+    const characters = .{ 'a', 'b', 'c', 'd' };
+
+    std.debug.print("Numbers: {any}\n", .{numbers});
+    std.debug.print("Characters: {any}\n", .{characters});
 }

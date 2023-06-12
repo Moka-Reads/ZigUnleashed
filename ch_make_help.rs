@@ -1,7 +1,7 @@
 // This file is built to help determine the Makefile Variables for a given chapter
 use std::fmt;
 use std::fs;
-use std::io::Result;
+use std::io::{Result, Write};
 use std::path::Path;
 struct MakeVar {
     c: Vec<String>,
@@ -18,6 +18,14 @@ struct Zig {
 impl Zig {
     pub fn new(ch: &str, file_name: &str) -> Result<Self> {
         let name = format!("{}/{}", ch, file_name);
+
+        if Path::new(&name).is_dir() {
+            return Ok(Self {
+                file: file_name.to_string(),
+                ty: ZigType::Proj,
+            });
+        }
+
         let content = fs::read_to_string(name)?;
         let ty = if content.contains("main") {
             ZigType::Bin
@@ -40,6 +48,7 @@ impl fmt::Display for Zig {
 enum ZigType {
     Bin,
     Test,
+    Proj,
 }
 
 impl MakeVar {
@@ -69,57 +78,194 @@ impl MakeVar {
                 }
                 None => continue,
             }
-            // check exercise dir 
+        }
+        // check exercise dir
+        let ex_path = path.join("exercises");
+        for entry in fs::read_dir(&ex_path)? {
+            let entry = entry?;
+            let file_name = entry.file_name().into_string().unwrap();
+            let name = format!("exercises/{file_name}");
+            self.zig.push(Zig::new(ch, &name)?);
         }
         Ok(())
     }
     pub fn to_string(&self) -> String {
-        let c_files = self
-            .c
-            .iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<String>>()
-            .join(" ");
-        let cpp_files = self
-            .cpp
-            .iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<String>>()
-            .join(" ");
-        let rs_files = self
-            .rs
-            .iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<String>>()
-            .join(" ");
-        let zig_bin_files = self
-            .zig
-            .iter()
-            .filter(|x| x.ty == ZigType::Bin)
-            .cloned()
-            .collect::<Vec<Zig>>()
-            .iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<String>>()
-            .join(" ");
-        let zig_test_files = self
-            .zig
-            .iter()
-            .filter(|x| x.ty == ZigType::Test)
-            .cloned()
-            .collect::<Vec<Zig>>()
-            .iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<String>>()
-            .join(" ");
+        let mut result = String::new();
 
-        let zig_bin_var = format!("ZIG_EXE = {zig_bin_files}");
-        let zig_test_var = format!("ZIG_TEST = {zig_test_files}");
-        let rs_var = format!("RS = {rs_files}");
-        let cpp_var = format!("CPP = {cpp_files}");
-        let c_var = format!("C = {c_files}");
+        if !self.c.is_empty() {
+            let c_files = self
+                .c
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join(" ");
+            result.push_str(&format!("C_FILES = {}\n", c_files));
+        }
 
-        vec![zig_bin_var, zig_test_var, rs_var, cpp_var, c_var].join("\n")
+        if !self.cpp.is_empty() {
+            let cpp_files = self
+                .cpp
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join(" ");
+            result.push_str(&format!("CPP_FILES = {}\n", cpp_files));
+        }
+
+        if !self.rs.is_empty() {
+            let rs_files = self
+                .rs
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join(" ");
+            result.push_str(&format!("RS_FILES = {}\n", rs_files));
+        }
+
+        if !self.zig.is_empty() {
+            let zig_bin_files: Vec<String> = self
+                .zig
+                .iter()
+                .filter(|x| x.ty == ZigType::Bin)
+                .cloned()
+                .collect::<Vec<Zig>>()
+                .iter()
+                .map(|x| x.to_string())
+                .collect();
+            if !zig_bin_files.is_empty() {
+              result.push_str(&format!("ZIG_EXE_FILES = {}\n", zig_bin_files.join(" ")));
+            }
+
+            let zig_test_files: Vec<String> = self
+                .zig
+                .iter()
+                .filter(|x| x.ty == ZigType::Test)
+                .cloned()
+                .collect::<Vec<Zig>>()
+                .iter()
+                .map(|x| x.to_string())
+                .collect();
+            if !zig_test_files.is_empty() {
+              result.push_str(&format!("ZIG_TEST_FILES = {}\n", zig_test_files.join(" ")));
+            }
+
+            let zig_projs: Vec<String> = self
+                .zig
+                .iter()
+                .filter(|x| x.ty == ZigType::Proj)
+                .cloned()
+                .collect::<Vec<Zig>>()
+                .iter()
+                .map(|x| x.to_string())
+                .collect();
+            if !zig_projs.is_empty() {
+              result.push_str(&format!("ZIG_PROJ_FILES = {}\n", zig_projs.join(" ")));
+            }
+        }
+
+        result
+    }
+}
+
+// Compiler environment variables
+const CC: &str = "CC = clang";
+const CPP: &str = "CC+ = g++";
+const RUSTC: &str = "RUSTC = rustc";
+
+struct Commands {
+    variables: Vec<String>,
+    commands: Vec<Command>,
+}
+
+struct Command {
+    command: String,
+    arg: String,
+}
+
+impl Command {
+    pub fn rust() -> Self {
+        let command = "compile_rs: ";
+        let arg = r#"$(foreach file, $(RS), \
+		$(eval out=$(patsubst %.rs,%_rs,$(file))) \
+		$(RUSTC) $(file) -o $(out);)"#;
+
+        Self {
+            command: command.to_string(),
+            arg: format!("\t{arg}")
+        }
+    }
+    pub fn c() -> Self {
+        let command = "compile_c: ";
+        let arg = r#"$(foreach file, $(C), \
+		$(eval out=$(patsubst %.c,%_c,$(file))) \
+		$(CC) $(file) -o $(out);)"#;
+        Self {
+            command: command.to_string(),
+            arg: format!("\t{arg}")
+        }
+    }
+    pub fn cpp() -> Self {
+        let command = "compile_cpp: ";
+        let arg = r#"$(foreach file, $(CPP), \
+		$(eval out=$(patsubst %.cpp,%_cpp,$(file))) \
+		$(CC+) $(file) -o $(out);)"#;
+        Self {
+            command: command.to_string(),
+            arg: format!("\t{arg}")
+        }
+    }
+    pub fn zig() -> Self {
+        let command = "compile_zig: ";
+        let bin_arg = r#"$(foreach file, $(ZIG_EXE), \
+		zig build-exe $(file);)"#;
+        let test_arg = r#"$(foreach file, $(ZIG_TEST), \
+		zig test $(file);)"#;
+        let proj_arg = r#"$(foreach proj, $(ZIG_PROJS), \
+		cd $(proj) && zig build;)"#;
+
+        Self {
+            command: command.to_string(),
+            arg: vec![format!("\t{bin_arg}"), format!("\t{test_arg}"), format!("\t{proj_arg}")].join("\n"),
+        }
+    }
+    pub fn to_string(&self) -> String {
+        vec![self.command.to_string(), self.arg.to_string()].join("\n")
+    }
+}
+
+impl Commands {
+    pub fn new(make_var: &MakeVar) -> Self {
+        let mut variables = vec![];
+        let mut commands = vec![];
+
+        if !make_var.c.is_empty() {
+            variables.push(CC.to_string());
+            commands.push(Command::c());
+        }
+
+        if !make_var.cpp.is_empty() {
+            variables.push(CPP.to_string());
+            commands.push(Command::cpp());
+        }
+
+        if !make_var.rs.is_empty() {
+            variables.push(RUSTC.to_string());
+            commands.push(Command::rust());
+        }
+
+        if !make_var.zig.is_empty() {
+            // zig commands
+            commands.push(Command::zig());
+        }
+
+        Self {
+            variables,
+            commands,
+        }
+    }
+    pub fn to_string(&self) -> String {
+        let command_strings: Vec<String> = self.commands.iter().map(|x| x.to_string()).collect();
+        vec![self.variables.join("\n"), command_strings.join("\n")].join("\n")
     }
 }
 
@@ -128,7 +274,13 @@ fn main() -> Result<()> {
 
     let mut make_var = MakeVar::new();
     make_var.search(&ch)?;
-    println!("{}", make_var.to_string());
 
+    let commands = Commands::new(&make_var);
+
+    let path = format!("{}/Makefile", &ch.trim());
+
+    let mut file = fs::File::create(&path)?;
+    let string = vec![make_var.to_string(), commands.to_string()].join("\n");
+    file.write_all(string.as_bytes())?;
     Ok(())
 }

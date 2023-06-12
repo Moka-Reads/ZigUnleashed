@@ -1,13 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
-
-// A structure to represent a slice in Zig
-typedef struct
-{
-    // a dynamic array 
-    int* ptr;
-    // the length the slice takes 
-    size_t len;
+typedef struct { // A structure to represent a slice in Zig
+    int* ptr; // a dynamic array
+    size_t len; // the length the slice takes
 } Slice;
 
 Slice createSlice(size_t length){
@@ -35,20 +30,12 @@ void freeSlice(Slice* slice){
 int main(){
     // create a slice that allocates a size of 5
     Slice slice = createSlice(5);
-
     // assign values to the elements of the slice 
-    for(size_t i = 0; i < slice.len; i++){
-        slice.ptr[i] = i + 1;
-    }
-
+    for(size_t i = 0; i < slice.len; i++){ slice.ptr[i] = i + 1; }
     // print the values 
-    for(size_t i = 0; i < slice.len; i++){
-        printf("%d ", slice.ptr[i]);
-    }
+    for(size_t i = 0; i < slice.len; i++){ printf("%d ", slice.ptr[i]); }
     printf("\n");
-
     // free the slice at the end of the scope 
     freeSlice(&slice);
-
     return 0;
 }
