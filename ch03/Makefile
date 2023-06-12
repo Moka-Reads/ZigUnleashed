@@ -1,15 +1,12 @@
-ZIG_EXE = fn_ptr.zig add.zig anytype_mult.zig swap.zig hash.zig max.zig variadic.zig vis.zig
-ZIG_TEST = fib.zig vis_fns.zig exercises/exercise1.zig exercises/exercise2.zig exercises/exercise3.zig
-ZIG_PROJS = 
-RS = fn_ptr.rs
-CPP = max.cpp
-C = variadic.c swap.c
+C_FILES = variadic.c swap.c
+CPP_FILES = max.cpp
+RS_FILES = fn_ptr.rs
+ZIG_EXE_FILES = fn_ptr.zig add.zig anytype_mult.zig swap.zig hash.zig max.zig variadic.zig vis.zig
+ZIG_TEST_FILES = fib.zig vis_fns.zig exercises/exercise1.zig exercises/exercise2.zig exercises/exercise3.zig
+
 CC = clang
-CC_OUT = $(patsubst %.c,%_c,$(C))
 CC+ = g++
-CPP_OUT = $(patsubst %.cpp,%_cpp,$(CPP))
 RUSTC = rustc
-RS_OUT = $(patsubst %.rs,%_rs,$(RS))
 compile_c: 
 	$(foreach file, $(C), \
 		$(eval out=$(patsubst %.c,%_c,$(file))) \

@@ -1,44 +1,22 @@
-ZIG_EXE_BETA = break_example.zig data_types.zig if_else_example.zig if_example.zig nested_for.zig switch_example.zig while_inline1000.zig while_reg1000.zig while.zig 
-ZIG_EXE_EDGE = continue_example.zig for.zig 
-RS = match_example.rs 
-C = switch_example.c 
+C_FILES = switch_example.c
+RS_FILES = match_example.rs
+ZIG_EXE_FILES = while.zig if_example.zig continue_example.zig nested_for.zig while_reg1000.zig switch_example.zig data_types.zig while_inline1000.zig if_else_example.zig break_example.zig for.zig exercises/exercise1.zig exercises/exercise2.zig
+ZIG_TEST_FILES = exercises/user_manifesto.txt
 
-# compiles all zig code using v0.10
-compile_zig_beta: 
-	# change to beta compiler 
-	sudo snap refresh zig --beta 
-
-	# compile projects 
-	cd id_man
-	zig build
-	cd ../our_lib 
-	zig build 
-	cd ..
-
-	$(foreach file, $(ZIG_EXE_BETA), zig build-exe $(file);)
-
-# compiles all zig code using v0.11
-compile_zig_edge: 
-	# change to edge compiler 
-	sudo snap refresh zig --edge
-
-	$(foreach file, $(ZIG_EXE_EDGE), zig build-exe $(file);)
-
-compile_zig: 
-	make compile_zig_beta
-	make compile_zig_edge
-
-compile_rs: 
-	rustc $(RS)
-
+CC = clang
+RUSTC = rustc
 compile_c: 
-	clang $(C)
-
-compile: 
-	make compile_zig
-	make compile_rs 
-	make compile_c 
-
-
-
-	
+	$(foreach file, $(C), \
+		$(eval out=$(patsubst %.c,%_c,$(file))) \
+		$(CC) $(file) -o $(out);)
+compile_rs: 
+	$(foreach file, $(RS), \
+		$(eval out=$(patsubst %.rs,%_rs,$(file))) \
+		$(RUSTC) $(file) -o $(out);)
+compile_zig: 
+	$(foreach file, $(ZIG_EXE), \
+		zig build-exe $(file);)
+	$(foreach file, $(ZIG_TEST), \
+		zig test $(file);)
+	$(foreach proj, $(ZIG_PROJS), \
+		cd $(proj) && zig build;)
