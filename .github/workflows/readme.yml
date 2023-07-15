@@ -19,7 +19,7 @@ jobs:
           go-version: 1.17
 
       - name: Run Go file
-        run: go run myfile.go
+        run: go run readme.go
 
       - name: Commit and push changes
         uses: ad-m/github-push-action@master
