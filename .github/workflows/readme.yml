@@ -1,4 +1,4 @@
-name: Readme 
+name: Run Go file, commit and push changes
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  run-and-push:
+  run-commit-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +19,9 @@ jobs:
           go-version: 1.17
 
       - name: Run Go file
-        run: go run readme.go
+        run: go run myfile.go
 
       - name: Commit and push changes
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<actions@github.com>"
-          git add .
-          git commit -m "Update from GitHub Action"
-          git remote set-url origin https://$GITHUB_ACTOR:${{ secrets.REPO_ACCESS }}@${{ github.event.repository.clone_url }}
-          git push
-
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_ACCESS }}
