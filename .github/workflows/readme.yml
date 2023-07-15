@@ -28,3 +28,5 @@ jobs:
           git add .
           git commit -m "Update from GitHub Action"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS }}
