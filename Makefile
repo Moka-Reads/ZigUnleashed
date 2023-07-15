@@ -16,8 +16,12 @@ compile_ch04:
 	cd ch04 && make compile_c && \
 	make compile_zig
 
-compile_all: compile_ch01 compile_ch02 compile_ch03 compile_ch04
+compile_ch05:
+	cd ch05 && 
+
+compile_all: compile_ch01 compile_ch02 compile_ch03 compile_ch04 compile_ch05
+
 
 clean: 
-	find ./*/ -type f -executable -exec rm {} \;
-	rm -f ./*/*.o && rm -f ./*/exercises/*.o
+    find ./*/ -type f -executable -exec rm {} \;
+    rm -f ./*/*.o && rm -f ./*/exercises/*.o
