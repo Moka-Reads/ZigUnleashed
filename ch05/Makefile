@@ -1,6 +1,6 @@
-C_FILES = number.c 
+C_FILES = number.c union_undef.c 
 CPP_FILES = methods.cpp
-ZIG_EXE_FILES = person.zig struct_intro.zig status.zig number.zig enums.zig status_expanded.zig point.zig packed.zig
+ZIG_EXE_FILES = person.zig struct_intro.zig status.zig number.zig enums.zig status_expanded.zig point.zig packed.zig union_undef.zig
 
 CC = clang
 CC+ = g++

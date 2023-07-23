@@ -1,20 +1,13 @@
 const std = @import("std");
 pub fn main() !void {
-    // allocate using a page allocator
-    var allocator = std.heap.page_allocator;
+    var allocator = std.heap.page_allocator; // allocate using a page allocator
     // what's done in createSlice...create our pointer for 5 i32 elements
     var ptr = try allocator.alloc(i32, 5);
-    // create a slice using the allocated memory
-    var slice: []i32 = &[_]i32{};
+    var slice: []i32 = &[_]i32{}; // create a slice using the allocated memory
     slice = ptr;
-    // set the length to 5
-    slice.len = 5;
+    slice.len = 5; // set the length to 5
     // what's done in main...assign values to the elements of the slice
-    slice[0] = 1;
-    slice[1] = 2;
-    slice[2] = 3;
-    slice[3] = 4;
-    slice[4] = 5;
+    for(slice) |_, i|{slice[i] = @intCast(i32, i);}
     // Print the values of the slice
     for (slice) |element| {
         std.debug.print("{} ", .{element});
