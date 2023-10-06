@@ -1,2 +1,6 @@
 */*/zig-cache
 makegen
+*/*.exe 
+*/*.pdb
+*/*.o 
+*/*.obj
