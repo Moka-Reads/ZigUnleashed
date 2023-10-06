@@ -10,3 +10,4 @@ In this repository, you will find code samples for each chapter of the book. The
 - [Chapter 03: Functions](https://github.com/MKProj/ZigUnleashed/tree/main/ch03)  
 - [Chapter 04: Arrays and Slices](https://github.com/MKProj/ZigUnleashed/tree/main/ch04)  
 - [Chapter 05: Struct, Enums and Unions](https://github.com/MKProj/ZigUnleashed/tree/main/ch05)  
+- [Chapter 06: Pointers and Memory Management](https://github.com/MKProj/ZigUnleashed/tree/main/ch06)  
