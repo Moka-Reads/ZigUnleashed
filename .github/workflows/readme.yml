@@ -2,8 +2,8 @@ name: Run Go file, commit and push changes
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+permissions: write-all
 
 jobs:
   run-commit-push:
