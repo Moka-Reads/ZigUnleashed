@@ -1,8 +1,8 @@
 C_FILES = variadic.c swap.c
 CPP_FILES = max.cpp
 RS_FILES = fn_ptr.rs
-ZIG_EXE_FILES = fn_ptr.zig add.zig anytype_mult.zig swap.zig hash.zig max.zig variadic.zig vis.zig
-ZIG_TEST_FILES = fib.zig vis_fns.zig exercises/exercise1.zig exercises/exercise2.zig exercises/exercise3.zig
+ZIG_EXE_FILES = max.zig vis.zig anytype_mult.zig variadic.zig fn_ptr.zig add.zig swap.zig hash.zig
+ZIG_TEST_FILES = fib.zig vis_fns.zig exercises/exercise2.zig exercises/exercise1.zig exercises/exercise3.zig
 
 CC = clang
 CC+ = g++

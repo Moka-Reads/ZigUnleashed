@@ -69,8 +69,4 @@ pub fn root() -> Result<Vec<String>> {
 }
 
 
-const CLEAN: &str = r#"
-clean: 
-    find ./*/ -type f -executable -exec rm {} \;
-    rm -f ./*/*.o && rm -f ./*/exercises/*.o
-"#;
+const CLEAN: &str = "clean: \n\tfind ./*/ -type f -executable -exec rm {} \\;\n\trm -f ./*/*.o && rm -f ./*/exercises/*.o";

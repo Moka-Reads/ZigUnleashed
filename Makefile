@@ -21,9 +21,12 @@ compile_ch05:
 	make compile_cpp && \
 	make compile_zig
 
-compile_all: compile_ch01 compile_ch02 compile_ch03 compile_ch04 compile_ch05
+compile_ch06:
+	cd ch06 && make compile_c && \
+	make compile_zig
 
-clean:
-	find . -type f -executable -delete
-	rm -f */*.o ./exercises/*.o
-	rm -f */*.a ./exercises/*.a
+compile_all: compile_ch01 compile_ch02 compile_ch03 compile_ch04 compile_ch05 compile_ch06
+
+clean: 
+	find ./*/ -type f -executable -exec rm {} \;
+	rm -f ./*/*.o && rm -f ./*/exercises/*.o

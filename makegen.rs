@@ -70,6 +70,9 @@ impl MakeVar {
             match entry.path().extension() {
                 Some(p) => {
                     let name = entry.file_name().into_string().unwrap();
+                    if name.contains("extern"){
+                        continue;
+                    }
                     match p.to_str().unwrap() {
                         "c" => self.c.push(name),
                         "cpp" => self.cpp.push(name),
@@ -89,8 +92,10 @@ impl MakeVar {
         for entry in fs::read_dir(&ex_path)? {
             let entry = entry?;
             let file_name = entry.file_name().into_string().unwrap();
-            let name = format!("exercises/{file_name}");
-            self.zig.push(Zig::new(ch, &name)?);
+            if file_name.contains("zig"){
+                let name = format!("exercises/{file_name}");
+                self.zig.push(Zig::new(ch, &name)?);
+            }
         }
         Ok(())
     }

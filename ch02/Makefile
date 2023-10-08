@@ -1,7 +1,7 @@
 C_FILES = switch_example.c
 RS_FILES = match_example.rs
-ZIG_EXE_FILES = while.zig if_example.zig continue_example.zig nested_for.zig while_reg1000.zig switch_example.zig data_types.zig while_inline1000.zig if_else_example.zig break_example.zig for.zig exercises/exercise1.zig exercises/exercise2.zig
-ZIG_TEST_FILES = exercises/user_manifesto.txt
+ZIG_EXE_FILES = while.zig while_inline1000.zig for.zig break_example.zig if_example.zig while_reg1000.zig if_else_example.zig nested_for.zig continue_example.zig switch_example.zig exercises/exercise2.zig exercises/exercise1.zig
+ZIG_TEST_FILES = data_types.zig
 
 CC = clang
 RUSTC = rustc
