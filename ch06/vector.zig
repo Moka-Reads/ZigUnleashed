@@ -1,32 +1,36 @@
 const std = @import("std");
 
-// Define a Vector struct with generic type T
+/// Define a Vector struct with generic type T
 pub fn Vector(comptime T: type) type {
     return struct {
-        // Memory allocator for the vector
+        /// Memory allocator for the vector
         allocator: *std.mem.Allocator,
-        // Array of items of type T
+        /// Array of items of type T
         items: []T = &.{},
-        // Current length of the vector
+        /// Current length of the vector
         len: usize = 0,
-        // Current capacity of the vector
+        /// Current capacity of the vector
         cap: usize = 0,
 
         const Self = @This();
-        // Factor by which to grow the vector when it's full
+        /// Factor by which to grow the vector when it's full
         const growFactor: usize = 2;
 
-        // Initialize a new vector with a given allocator
+        /// Initialize a new vector with a given allocator
         pub fn init(allocator: *std.mem.Allocator) Self {
             return .{ .allocator = allocator };
         }
-
-        // Deinitialize the vector, freeing its memory
+        /// Initalize a new vector with a given capacity
+        pub fn init_with_cap(allocator: *std.mem.Allocator, cap: usize) !Self {
+            const items = try allocator.alloc(cap);
+            return .{ .allocator = allocator, .cap = cap, .items = items };
+        }
+        /// Deinitialize the vector, freeing its memory
         pub fn deinit(self: *Self) void {
             self.allocator.free(self.items);
         }
 
-        // Check if the vector is full and grow it if necessary
+        /// Check if the vector should grow by seeing if it is full
         fn should_grow(self: *Self) !void {
             if (self.len >= self.cap) {
                 self.cap = @max(growFactor * self.cap, 1);
@@ -34,14 +38,17 @@ pub fn Vector(comptime T: type) type {
             }
         }
 
-        // Append an item to the end of the vector
+        /// Append an item to the end of the vector
+        // Runtime Complexity: O(1)
+        // If needs to resize: O(n)
         pub fn append(self: *Self, item: T) !void {
             try self.should_grow();
             self.items[self.len] = item;
             self.len += 1;
         }
 
-        // Insert an item at a specific index in the vector
+        /// Insert an item at a specific index in the vector
+        // Runtime Complexity: O(n)
         pub fn insert(self: *Self, item: T, index: usize) !void {
             try self.should_grow();
             if (index >= self.cap) {
@@ -51,7 +58,8 @@ pub fn Vector(comptime T: type) type {
             self.len += 1;
         }
 
-        // Delete an item at a specific index in the vector
+        /// Delete an item at a specific index in the vector
+        // Runtime Complexity: O(n)
         pub fn delete(self: *Self, index: usize) void {
             if (index >= self.len) return;
 
@@ -62,7 +70,8 @@ pub fn Vector(comptime T: type) type {
             self.len -= 1;
         }
 
-        // Remove and return the last item in the vector
+        /// Remove and return the last item in the vector
+        // Runtime Complexity: O(1)
         pub fn pop(self: *Self) ?T {
             if (self.len == 0) {
                 return null;
@@ -71,29 +80,59 @@ pub fn Vector(comptime T: type) type {
                 return self.items[self.len];
             }
         }
+        /// Binary Search that returns the index if target is found or null if not
+        // Runtime Complexity: O(log n)
+        pub fn binary_search(self: Self, target: T) ?usize {
+            var left: usize = 0;
+            var right: usize = self.items.len - 1;
+
+            while (left <= right) {
+                const mid = left + (right - left) / 2;
+                if (self.items[mid] == target) {
+                    return mid;
+                }
+
+                // If the target is greater, ignore the left half
+                if (self.items[mid] < target) {
+                    left = mid + 1;
+                } // If the target is smaller, ignore the right half
+                else {
+                    right = mid - 1;
+                }
+            }
+            // Target is not in the array
+            return null;
+        }
     };
 }
 
 pub fn main() !void {
+    // Create our general purpose allocator
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    // Get the allocator for our Vector
     var allocator = gpa.allocator();
-    var array = Vector(i32).init(&allocator);
+    // Initialize the vector
+    var vector = Vector(i32).init(&allocator);
+    // Defer GPA deinitialization and add panic for memory leak
     defer {
         const deinit_status = gpa.deinit();
         if (deinit_status == .leak) @panic("Memory Leak!");
-        array.deinit();
     }
+    // Defer deinitialization of vector
+    defer vector.deinit();
 
-    try array.append(1);
-    try array.append(2);
-    try array.insert(32, 2);
-    try array.append(3);
-    array.delete(1);
+    // Append items to the vector
+    try vector.append(1); // cap: 1, len: 1 [1]
+    try vector.append(2); // cap: 2, len: 2 [1,2]
+    try vector.insert(32, 2); // cap: 4, len: 3 [1, 2, 32]
+    try vector.append(3); // cap: 4, len: 4 [1, 2, 32, 3]
+    vector.delete(1); // cap: 4, len: 3 [1, 32, 3]
 
-    for (array.items[0..array.len]) |item| {
-        std.debug.print("Item: {}\n", .{item});
+    for (vector.items[0..vector.len], 0..vector.len) |item, i| {
+        std.debug.print("Item: {}: {}\n", .{ i, item });
     }
-    for (0..array.len) |_| {
-        std.debug.print("Popped: {any}\n", .{array.pop()});
+    for (0..vector.len) |_| {
+        std.debug.print("Popped: {any}\n", .{vector.pop()});
     }
+    std.debug.print("Search for 32: {any}", .{vector.binary_search(32)});
 }
