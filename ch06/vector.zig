@@ -131,8 +131,10 @@ pub fn main() !void {
     for (vector.items[0..vector.len], 0..vector.len) |item, i| {
         std.debug.print("Item: {}: {}\n", .{ i, item });
     }
+
+    std.debug.print("Search for 32: {any}\n", .{vector.binary_search(32)});
+
     for (0..vector.len) |_| {
         std.debug.print("Popped: {any}\n", .{vector.pop()});
     }
-    std.debug.print("Search for 32: {any}", .{vector.binary_search(32)});
 }
