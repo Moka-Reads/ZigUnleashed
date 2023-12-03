@@ -156,10 +156,24 @@ pub fn main() !void {
     var FBA = FixedBufferAllocator.init(&buffer);
     const allocator = FBA.allocator();
 
-    const block1 = allocator.alloc(u32, 200);
-    const block2 = allocator.alloc(i32, 200);
-    allocator.free(block1);
-    const block3 = allocator.alloc(f32, 300);
+    const block1 = try allocator.alloc(i32, 100);
+    // end_index = 0 + 100 * @sizeOf(i32) = 400
+    std.debug.print("Block 1 Allocated! End Index: {}\n", .{FBA.end_index});
+
+    const block2 = try allocator.alloc(u8, 100);
+    // end_index = 400 + 100 = 500
+    std.debug.print("Block 2 Allocated! End Index: {}\n", .{FBA.end_index});
+
+    const block3 = try allocator.alloc(u32, 50);
+    // end_index = 500 + 50 *@sizeOf(u32) = 700
+    std.debug.print("Block 3 Allocated! End Index: {}\n", .{FBA.end_index});
     allocator.free(block3);
+    // Last allocated: yes, end_index = 700 - 200 = 500
+    std.debug.print("Block 3 Freed! End Index: {}\n", .{FBA.end_index});
     allocator.free(block2);
+    // Last allocated: yes, end_index = 500 - 100 = 400
+    std.debug.print("Block 2 Freed! End Index: {}\n", .{FBA.end_index});
+    allocator.free(block1);
+    // Last allocated: yes, end_index = 400 - 400 = 0
+    std.debug.print("Block 1 Freed! End Index: {}\n", .{FBA.end_index});
 }
