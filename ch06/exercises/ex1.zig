@@ -1,24 +1,78 @@
 const std = @import("std");
+const cwd = std.fs.cwd();
 
-/// `*anyopaque` is used to represent a pointer to an `opaque` type.
-/// An `opaque` type is a type whose size is unknown or not specified.
-/// This is similar to `void*` in C, which can point to a value of any type
-pub fn anyopaque_to_string(ptr: *anyopaque) []u8 {
-    // we first need to make sure our pointer is aligned correctly
-    // then we are able to convert to a single-item pointer of []u8
-    // we then return the string by dereferencing
-    var slice: *[]u8 = @ptrCast(@alignCast(ptr));
-    return slice.*;
-}
+const FileSizeTypes = enum {
+    Small, // 10KB
+    Medium, // 100KB
+    Large, // 1MB
+    Unknown, // if user gives wrong
+
+    const Self = @This();
+    // A little predefined hashmap
+    const Table = [_]struct { key: []const u8, value: Self }{
+        .{ .key = "Small", .value = .Small },
+        .{ .key = "Medium", .value = .Medium },
+        .{ .key = "Large", .value = .Large },
+    };
+
+    const tenKB_binary: usize = 10 * 1024;
+    const hundredKB_binary: usize = 100 * 1024;
+    const oneMB_binary: usize = 1 * 1024 * 1024;
+
+    pub fn parse(string: []const u8) Self {
+        for (Table) |entry| {
+            if (std.mem.eql(u8, string, entry.key)) return entry.value;
+        }
+        return .Unknown;
+    }
+    pub fn size(self: Self) usize {
+        return switch (self) {
+            .Small => tenKB_binary,
+            .Medium => hundredKB_binary,
+            .Large => oneMB_binary,
+            .Unknown => 0,
+        };
+    }
+};
+
+const help_message =
+    \\ Chapter 6 Exercise 2 
+    \\ Usage: 
+    \\ ./ex2 <file_path> <file_size_type>
+    \\
+    \\ File Size Types: 
+    \\ Small = 10KB
+    \\ Medium = 100KB
+    \\ Large = 1MB
+;
 
 pub fn main() !void {
-    // create a string 
-    var array: []const u8 = "Hello world!";
-    // cast the string as a pointer to `*anyopaque`
-    var anyopaque_pointer: *anyopaque = @ptrCast(&array.ptr);
-    // convert the opaque pointer back to string
-    const slice = anyopaque_to_string(anyopaque_pointer);
-    // check if its the same length and equal
-    std.debug.print("Length Equal? {}\n", .{array.len == slice.len});
-    std.debug.print("String Equal? {}\n", .{std.mem.eql(u8, array, slice)});
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
+    defer {
+        const check = gpa.deinit();
+        if (check == .leak) @panic("Memory leak!");
+    }
+    // get arguments
+    var arguments = try std.process.argsAlloc(allocator);
+    defer std.process.argsFree(allocator, arguments);
+
+    if (arguments.len != 3) {
+        std.debug.print("{s}\n", .{help_message});
+        return;
+    }
+
+    const name = arguments[1];
+    const size = FileSizeTypes.parse(arguments[2]);
+    if (size == .Unknown) {
+        std.debug.print("Unknown size!", .{});
+        return;
+    }
+    // read file
+    const buffer = try cwd.readFileAlloc(allocator, name, size.size());
+    defer allocator.free(buffer);
+    std.debug.print("File Read: {s}\n", .{name});
+    std.debug.print("Bytes Read: {d}\n", .{buffer.len});
+    std.debug.print("Max Bytes: {d}\n", .{size.size()});
+    std.debug.print("Content:\n{s}\n", .{buffer});
 }

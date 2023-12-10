@@ -177,3 +177,5 @@ pub fn main() !void {
     // Last allocated: yes, end_index = 400 - 400 = 0
     std.debug.print("Block 1 Freed! End Index: {}\n", .{FBA.end_index});
 }
+
+

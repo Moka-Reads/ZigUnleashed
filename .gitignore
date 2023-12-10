@@ -4,3 +4,4 @@ makegen
 */*.pdb
 */*.o 
 */*.obj
+ch*/zig-cache
