@@ -1,9 +1,8 @@
-name: Run Go file, commit and push changes
+name: Run Python script, commit and push changes
 
 on:
   push:
     branches: [main]
-permissions: write-all
 
 jobs:
   run-commit-push:
@@ -13,15 +12,24 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Set up Go
-        uses: actions/setup-go@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          go-version: 1.17
+          python-version: 3.8
 
-      - name: Run Go file
-        run: go run readme.go
+      - name: Install dependencies
+        run: |
+          pip install tabulate matplotlib
+
+      - name: Run Python script
+        run: python readme.py
 
       - name: Commit and push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.REPO_ACCESS }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add -A
+          git commit -m "Update README.md with statistics"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS }}
