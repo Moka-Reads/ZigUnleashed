@@ -1,0 +1,5 @@
+zig-cache 
+rscross/target
+zcross/zig-cache 
+zcross/zig-out 
+*.o 
