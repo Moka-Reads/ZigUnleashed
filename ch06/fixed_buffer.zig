@@ -2,6 +2,27 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const mem = std.mem;
 const assert = std.debug.assert;
+
+// zig fmt: off
+/// Checks if a pointer is within the range of a slice `container`
+/// Compares the integer representation of the pointer with the start
+/// and end of the slice
+fn sliceContainsPtr(container: []u8, ptr: [*]u8) bool {
+    // Checks if the pointer is at the start of the slice
+    return @intFromPtr(ptr) >= @intFromPtr(container.ptr) and
+        // Checks if the pointer is at the end of the slice
+    @intFromPtr(ptr) < (@intFromPtr(container.ptr) + container.len);
+}
+
+/// Checks if a slice is completely contained within another slice
+/// Compares the start and end with eachother
+fn sliceContainsSlice(container: []u8, slice: []u8) bool {
+    // Checks if the start of `slice` and `container` fall within range
+    return @intFromPtr(slice.ptr) >= @intFromPtr(container.ptr) and
+        // Checks if the ends of `slice` and `container` fall within range
+    (@intFromPtr(slice.ptr) + slice.len) <= (@intFromPtr(container.ptr) + container.len);
+}
+// zig fmt: on
 /// This is a simpler version of the Fixed Buffer Allocator
 /// from the Standard Library found at https://github.com/ziglang/zig/blob/0.11.x/lib/std/heap.zig
 /// This allocator will not be thread-safe and only suitable for single-threaded builds
@@ -37,10 +58,10 @@ pub const FixedBufferAllocator = struct {
     }
     /// checks if a slice is the last allocation made by the allocator
     pub fn isLastAllocation(self: *Self, buf: []u8) bool {
-        // checks if the end of the slice is the same as the current end of the allocator's buffer
+        // checks if the end of the slice is the same
+        // as the current end of the allocator's buffer
         return buf.ptr + buf.len == self.buffer.ptr + self.end_index;
     }
-
     // resets the FBA's index to 0
     pub fn reset(self: *Self) void {
         self.end_index = 0;
@@ -63,7 +84,8 @@ pub const FixedBufferAllocator = struct {
         const adjusted_index = self.end_index + adjust_off;
         // calculates the new index after allocating the memory block
         const new_end_index = adjusted_index + n;
-        // checks if the new end index exceeds the buffer length, if it does return null
+        // checks if the new end index exceeds the
+        // buffer length, if it does return null
         if (new_end_index > self.buffer.len) return null;
         // set the new end index
         self.end_index = new_end_index;
@@ -85,22 +107,27 @@ pub const FixedBufferAllocator = struct {
         _ = return_address; // Not used in this function
         assert(@inComptime() or self.ownsSlice(buf)); // Assert that the allocator owns the buffer
 
-        // If the buffer is not the last allocation, check if the new size is greater than the current size
+        // If the buffer is not the last allocation,
+        // check if the new size is greater than the current size
         if (!self.isLastAllocation(buf)) {
-            if (new_size > buf.len) return false; // If the new size is greater, return false
-            return true; // If the new size is less than or equal to the current size, return true
+            // If the new size is greater, return false
+            if (new_size > buf.len) return false;
+            // If the new size is less than or equal to the current size, return true
+            return true;
         }
-
-        // If the new size is less than or equal to the current size, reduce the end index of the allocator
+        // If the new size is less than or equal to the current size,
+        // reduce the end index of the allocator
         if (new_size <= buf.len) {
             const sub = buf.len - new_size;
             self.end_index -= sub;
             return true;
         }
 
-        // If the new size is greater than the current size, check if there's enough space in the buffer
+        // If the new size is greater than the current size,
+        // check if there's enough space in the buffer
         const add = new_size - buf.len;
-        if (add + self.end_index > self.buffer.len) return false; // If there's not enough space, return false
+        // If there's not enough space, return false
+        if (add + self.end_index > self.buffer.len) return false;
 
         // If there's enough space, increase the end index of the allocator
         self.end_index += add;
@@ -132,38 +159,16 @@ pub const FixedBufferAllocator = struct {
     }
 };
 
-/// Checks if a pointer is within the range of a slice `container`
-/// Compares the integer representation of the pointer with the start
-/// and end of the slice
-fn sliceContainsPtr(container: []u8, ptr: [*]u8) bool {
-    // Checks if the pointer is at the start of the slice
-    return @intFromPtr(ptr) >= @intFromPtr(container.ptr) and
-        // Checks if the pointer is at the end of the slice
-        @intFromPtr(ptr) < (@intFromPtr(container.ptr) + container.len);
-}
-
-/// Checks if a slice is completely contained within another slice
-/// Compares the start and end with eachother
-fn sliceContainsSlice(container: []u8, slice: []u8) bool {
-    // Checks if the start of `slice` and `container` fall within range
-    return @intFromPtr(slice.ptr) >= @intFromPtr(container.ptr) and
-        // Checks if the ends of `slice` and `container` fall within range
-        (@intFromPtr(slice.ptr) + slice.len) <= (@intFromPtr(container.ptr) + container.len);
-}
-
 pub fn main() !void {
     var buffer: [1000]u8 = undefined;
     var FBA = FixedBufferAllocator.init(&buffer);
     const allocator = FBA.allocator();
-
     const block1 = try allocator.alloc(i32, 100);
     // end_index = 0 + 100 * @sizeOf(i32) = 400
     std.debug.print("Block 1 Allocated! End Index: {}\n", .{FBA.end_index});
-
     const block2 = try allocator.alloc(u8, 100);
     // end_index = 400 + 100 = 500
     std.debug.print("Block 2 Allocated! End Index: {}\n", .{FBA.end_index});
-
     const block3 = try allocator.alloc(u32, 50);
     // end_index = 500 + 50 *@sizeOf(u32) = 700
     std.debug.print("Block 3 Allocated! End Index: {}\n", .{FBA.end_index});
@@ -177,5 +182,3 @@ pub fn main() !void {
     // Last allocated: yes, end_index = 400 - 400 = 0
     std.debug.print("Block 1 Freed! End Index: {}\n", .{FBA.end_index});
 }
-
-
