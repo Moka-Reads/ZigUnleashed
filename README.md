@@ -45,7 +45,7 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   |   Number of Files |   Total Lines | Percentage of Total Files   | Percentage of Total Lines   |
 |------------|-------------------|---------------|-----------------------------|-----------------------------|
-| Zig        |                82 |          2353 | 80.39%                      | 82.74%                      |
-| Rust       |                 4 |            31 | 3.92%                       | 1.09%                       |
-| C          |                13 |           323 | 12.75%                      | 11.36%                      |
-| C++        |                 3 |           137 | 2.94%                       | 4.82%                       |
+| Zig        |                83 |          3397 | 80.58%                      | 87.37%                      |
+| C          |                13 |           323 | 12.62%                      | 8.31%                       |
+| Rust       |                 4 |            31 | 3.88%                       | 0.80%                       |
+| C++        |                 3 |           137 | 2.91%                       | 3.52%                       |
