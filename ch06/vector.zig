@@ -80,6 +80,7 @@ pub fn Vector(comptime T: type) type {
                 return self.items[self.len];
             }
         }
+        
         /// Binary Search that returns the index if target is found or null if not
         // Runtime Complexity: O(log n)
         pub fn binary_search(self: Self, target: T) ?usize {
