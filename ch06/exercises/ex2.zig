@@ -1,3 +1,5 @@
+const std = @import("std");
+
 pub fn DoubleLinkedList(comptime T: type) type {
     return struct {
         const Self = @This();
@@ -85,5 +87,36 @@ pub fn DoubleLinkedList(comptime T: type) type {
                 list.len = 1;
             }
         }
+        pub fn print(self: Self) void {
+            var current = self.first;
+            while (current) |node| {
+                std.debug.print("{} -> ", .{node.data});
+                current = node.next;
+            }
+            std.debug.print("null\n", .{});
+        }
     };
+}
+
+pub fn main() !void {
+    var list = DoubleLinkedList(i32){};
+    var node1 = DoubleLinkedList(i32).Node{ .data = 10 };
+    var node2 = DoubleLinkedList(i32).Node{ .data = 20 };
+    var node3 = DoubleLinkedList(i32).Node{ .data = 30 };
+    // append nodes
+    list.append(&node1);
+    list.append(&node2);
+
+    // prepend nodes
+    list.prepend(&node3);
+
+    // insert after node 2
+    var node4 = DoubleLinkedList(i32).Node{ .data = 25 };
+    list.insertAfter(&node2, &node4);
+
+    // insert before node 3
+    var node5 = DoubleLinkedList(i32).Node{ .data = 15 };
+    list.insertBefore(&node3, &node5);
+
+    list.print();
 }

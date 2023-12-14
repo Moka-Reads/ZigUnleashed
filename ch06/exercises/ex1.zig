@@ -36,9 +36,9 @@ const FileSizeTypes = enum {
 };
 
 const help_message =
-    \\ Chapter 6 Exercise 2 
+    \\ Chapter 6 Exercise 1
     \\ Usage: 
-    \\ ./ex2 <file_path> <file_size_type>
+    \\ ./ex1 <file_path> <file_size_type>
     \\
     \\ File Size Types: 
     \\ Small = 10KB

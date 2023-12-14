@@ -30,3 +30,4 @@ compile_all: compile_ch01 compile_ch02 compile_ch03 compile_ch04 compile_ch05 co
 clean: 
 	find ./*/ -type f -executable -exec rm {} \;
 	rm -f ./*/*.o && rm -f ./*/exercises/*.o
+	rm -f ./*/*.a && rm -f ./*/exercises/*.a
