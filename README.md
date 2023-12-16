@@ -41,11 +41,74 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 ![File and Line Distribution Plot](statistics_plot.png)
 
-## Table
 
-| Language   |   Number of Files |   Total Lines | Percentage of Total Files   | Percentage of Total Lines   |
-|------------|-------------------|---------------|-----------------------------|-----------------------------|
-| Zig        |                85 |          3801 | 81.73%                      | 90.33%                      |
-| Rust       |                 4 |            31 | 3.85%                       | 0.74%                       |
-| C          |                13 |           323 | 12.50%                      | 7.68%                       |
-| C++        |                 2 |            53 | 1.92%                       | 1.26%                       |
+
+# Statistics per Chapter
+
+
+## Chapter 1: Introduction
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| Zig        | 1                 | 8             |
+| **Total**  | **1**             | **8**         |
+
+
+## Chapter 2: The Basics
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| Zig        | 15                | 335           |
+| C          | 1                 | 16            |
+| Rust       | 1                 | 9             |
+| **Total**  | **17**            | **360**       |
+
+
+## Chapter 3: Functions
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| Zig        | 13                | 267           |
+| Rust       | 1                 | 16            |
+| C          | 2                 | 43            |
+| C++        | 1                 | 22            |
+| **Total**  | **17**            | **348**       |
+
+
+## Chapter 4: Arrays and Slices
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| Zig        | 25                | 454           |
+| C          | 3                 | 123           |
+| **Total**  | **28**            | **577**       |
+
+
+## Chapter 5: Struct, Enums and Unions
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| C++        | 1                 | 31            |
+| C          | 3                 | 82            |
+| Zig        | 10                | 232           |
+| **Total**  | **14**            | **345**       |
+
+
+## Chapter 6: Pointers and Memory Management
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| Zig        | 17                | 2448          |
+| C          | 3                 | 53            |
+| **Total**  | **20**            | **2501**      |
+
+
+## Chapter 9: Advance Topics
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| C          | 1                 | 6             |
+| Zig        | 3                 | 99            |
+| Rust       | 2                 | 6             |
+| **Total**  | **6**             | **111**       |
+

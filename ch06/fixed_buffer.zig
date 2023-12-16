@@ -150,9 +150,10 @@ pub const FixedBufferAllocator = struct {
         const self: *Self = @ptrCast(@alignCast(ctx));
         _ = log2_buf_align; // Not used in this function
         _ = return_address; // Not used in this function
-        assert(@inComptime() or self.ownsSlice(buf)); // Assert that the allocator owns the buffer
-
-        // If the buffer is the last allocation made by the allocator, reduce the end index of the allocator
+        // Assert that the allocator owns the buffer
+        assert(@inComptime() or self.ownsSlice(buf)); 
+        // If the buffer is the last allocation made by the allocator, 
+        // reduce the end index of the allocator
         if (self.isLastAllocation(buf)) {
             self.end_index -= buf.len;
         }

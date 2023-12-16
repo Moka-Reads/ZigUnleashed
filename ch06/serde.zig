@@ -40,9 +40,7 @@ pub fn SerdeJSON(comptime T: type) type {
 const Person = struct {
     name: []const u8,
     age: u8,
-
     const Self = @This();
-
     /// Returns a default Person
     pub fn default() Self {
         return .{ .name = "Person", .age = 20 };
@@ -74,4 +72,3 @@ pub fn main() !void {
     std.debug.print("Deserialized:\n\t{any}\n", .{person_sj.value()});
     std.debug.print("Equal? {}\n", .{Person.equal(person, person_sj.value())});
 }
-

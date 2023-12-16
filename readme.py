@@ -74,18 +74,41 @@ def get_language(file_name):
         return "Rust"
     else:
         return "Unknown"
+    
+def is_cargo_project(directory):
+    cargo_toml_path = os.path.join(directory, "Cargo.toml")
+    return os.path.exists(cargo_toml_path)
+
 
 def list_files_in_directory(directory, language_files):
     for root, _, files in os.walk(directory):
+        # Exclude zig-cache directory
+        if "zig-cache" in root:
+            continue
+
         for file_name in files:
             if file_name.lower() != "makefile":  # Ignore files named "Makefile" (case-insensitive)
                 file_path = os.path.join(root, file_name)
                 language = get_language(file_name)
-                if language != "Unknown":
+
+                # Check if it's a Zig project
+                if is_zig_project(directory) and language == "Zig" and (file_name == "build.zig" or "src" in root):
                     line_count = count_lines(file_path)
                     language_files.setdefault(language, {"files": 0, "lines": 0})
                     language_files[language]["files"] += 1
                     language_files[language]["lines"] += line_count
+                # Check if it's a Rust Cargo project
+                elif is_cargo_project(directory) and language == "Rust" and (file_name == "Cargo.toml" or "src" in root):
+                    line_count = count_lines(file_path)
+                    language_files.setdefault(language, {"files": 0, "lines": 0})
+                    language_files[language]["files"] += 1
+                    language_files[language]["lines"] += line_count
+                elif language != "Unknown":
+                    line_count = count_lines(file_path)
+                    language_files.setdefault(language, {"files": 0, "lines": 0})
+                    language_files[language]["files"] += 1
+                    language_files[language]["lines"] += line_count
+
 
 
 def process_ch_directories(base_directory):
@@ -93,28 +116,43 @@ def process_ch_directories(base_directory):
 
     overall_language_files = {}  # Dictionary to store overall file counts and line counts for each language
 
-    # Find and sort 'ch*' directories by numerical part
-    ch_directories = [d for d in os.listdir(base_directory) if os.path.isdir(os.path.join(base_directory, d))]
-    ch_directories.sort(key=lambda x: int(ch_pattern.match(x).group(1)) if ch_pattern.match(x) else 0)
+    # Initialize chapter_section before the loop
+    chapter_section = "\n\n# Statistics per Chapter\n\n"
 
-    total_files = 0
-    total_lines = 0
+    for chap_num in range(1, 10):
+        chapter = chapters_map.get(chap_num, "")
+        if if_exists(chap_num):
+            chapter_directory = f"ch0{chap_num}" if chap_num < 10 else f"ch{chap_num}"
+            chapter_language_files = {}
+            list_files_in_directory(chapter_directory, chapter_language_files)
 
-    for dir_name in ch_directories:
-        full_directory_path = os.path.join(base_directory, dir_name)
-        print(f"\nProcessing directory: {full_directory_path}")
+            # Calculate chapter statistics
+            chapter_total_files = sum(stats["files"] for stats in chapter_language_files.values())
+            chapter_total_lines = sum(stats["lines"] for stats in chapter_language_files.values())
 
-        if not is_zig_project(full_directory_path):
-            language_files = {}
-            list_files_in_directory(full_directory_path, language_files)
+            # Skip chapters with no files
+            if chapter_total_files > 0:
+                # Add chapter header to the section
+                chapter_section += f"\n## Chapter {chap_num}: {chapter}\n\n"
 
-            # Update overall file counts and line counts for each language
-            for language, stats in language_files.items():
-                overall_language_files.setdefault(language, {"files": 0, "lines": 0})
-                overall_language_files[language]["files"] += stats["files"]
-                overall_language_files[language]["lines"] += stats["lines"]
-                total_files += stats["files"]
-                total_lines += stats["lines"]
+                # Create a markdown table for chapter statistics
+                chapter_table_headers = ["Language", "Number of Files", "Total Lines"]
+                chapter_table_data = []
+
+                # Add language-wise statistics to the table
+                for language, stats in chapter_language_files.items():
+                    chapter_table_data.append([language, stats["files"], stats["lines"]])
+
+                    # Accumulate language statistics to overall_language_files
+                    overall_language_files.setdefault(language, {"files": 0, "lines": 0})
+                    overall_language_files[language]["files"] += stats["files"]
+                    overall_language_files[language]["lines"] += stats["lines"]
+
+                chapter_table_data.append(["**Total**", f'**{chapter_total_files}**', f'**{chapter_total_lines}**'])
+
+                # Add chapter table to the section
+                chapter_section += tabulate(chapter_table_data, headers=chapter_table_headers, tablefmt="pipe", showindex=False)
+                chapter_section += "\n\n"
 
     # Set up colors for each language
     language_colors = {
@@ -151,15 +189,6 @@ def process_ch_directories(base_directory):
     plt.savefig('statistics_plot.png')
     plt.close()
 
-    # Create a markdown table for statistics
-    table_headers = ["Language", "Number of Files", "Total Lines", "Percentage of Total Files", "Percentage of Total Lines"]
-    table_data = []
-    for language, stats in overall_language_files.items():
-        percentage_files = (stats["files"] / total_files) * 100 if total_files > 0 else 0
-        percentage_lines = (stats["lines"] / total_lines) * 100 if total_lines > 0 else 0
-        table_data.append([language, stats["files"], stats["lines"], f"{percentage_files:.2f}%", f"{percentage_lines:.2f}%"])
-
-    markdown_table = tabulate(table_data, headers=table_headers, tablefmt="github")
     with open('README.md', 'w') as readme:
         readme.write(header)
         for chap_num in range(1, 10):
@@ -172,8 +201,8 @@ def process_ch_directories(base_directory):
         readme.write("\n\n# Statistics\n\n")
         readme.write(f"## File and Line Distribution\n\n")
         readme.write(f"![File and Line Distribution Plot](statistics_plot.png)\n\n")
-        readme.write(f"## Table\n\n")
-        readme.write(markdown_table)
+        readme.write(chapter_section)
+
 
 if __name__ == "__main__":
     base_directory = "."

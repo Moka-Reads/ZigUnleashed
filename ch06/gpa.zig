@@ -1,20 +1,28 @@
 /// Standard library implementation of General Purpose Allocator
 /// Can be found at https://github.com/ziglang/zig/blob/0.11.0/lib/std/heap/general_purpose_allocator.zig
-const std = @import("std");
-const builtin = @import("builtin");
-const log = std.log.scoped(.gpa);
-const math = std.math;
-const assert = std.debug.assert;
-const mem = std.mem;
-const Allocator = std.mem.Allocator;
-const page_size = std.mem.page_size;
-const StackTrace = std.builtin.StackTrace;
+const std = @import("std"); // std library
+const builtin = @import("builtin"); // builtin library
+const log = std.log.scoped(.gpa); // scoped logging for gpa
+const math = std.math; // math namespace
+const assert = std.debug.assert; // invokes undefined behaviour if result is false
+const mem = std.mem; // memory namespace
+const Allocator = std.mem.Allocator; // Allocator type
+const page_size = std.mem.page_size; // page size depending on OS
+const StackTrace = std.builtin.StackTrace; // A type to represent the stack's tracing
 
 /// Integer type for pointing to slots in a small allocation
 const SlotIndex = std.meta.Int(.unsigned, math.log2(page_size) + 1);
 
+/// The number of stack trace frames to include in the default test stack trace.
 const default_test_stack_trace_frames: usize = if (builtin.is_test) 8 else 4;
-const default_sys_stack_trace_frames: usize = if (std.debug.sys_can_stack_trace) default_test_stack_trace_frames else 0;
+
+/// The number of stack trace frames to include in the default system stack trace.
+const default_sys_stack_trace_frames: usize = if (std.debug.sys_can_stack_trace)
+    default_test_stack_trace_frames
+else
+    0;
+
+/// The number of stack trace frames to include in the default stack trace.
 const default_stack_trace_frames: usize = switch (builtin.mode) {
     .Debug => default_sys_stack_trace_frames,
     else => 0,
@@ -67,7 +75,6 @@ pub const Check = enum { ok, leak };
 
 pub fn GeneralPurposeAllocator(comptime config: Config) type {
     return struct {
-        /// The GPA struct represents a General Purpose Allocator.
         /// It manages memory allocations and deallocations using buckets for small allocations
         /// and a table for large allocations. It supports optional safety checks and metadata retention.
         ///
@@ -80,14 +87,18 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
         /// - `requested_memory_limit`: The maximum limit of memory that can be requested.
         /// - `mutex`: The mutex used for thread safety.
         backing_allocator: Allocator = std.heap.page_allocator,
-        buckets: [small_bucket_count]?*BucketHeader = [1]?*BucketHeader{null} ** small_bucket_count,
+        buckets: [small_bucket_count]?*BucketHeader =
+            [1]?*BucketHeader{null} ** small_bucket_count,
         large_allocations: LargeAllocTable = .{},
-        small_allocations: if (config.safety) SmallAllocTable else void = if (config.safety) .{} else {},
+        small_allocations: if (config.safety) SmallAllocTable else void =
+            if (config.safety) .{} else {},
         empty_buckets: if (config.retain_metadata) ?*BucketHeader else void =
             if (config.retain_metadata) null else {},
 
-        total_requested_bytes: @TypeOf(total_requested_bytes_init) = total_requested_bytes_init,
-        requested_memory_limit: @TypeOf(requested_memory_limit_init) = requested_memory_limit_init,
+        total_requested_bytes: @TypeOf(total_requested_bytes_init) =
+            total_requested_bytes_init,
+        requested_memory_limit: @TypeOf(requested_memory_limit_init) =
+            requested_memory_limit_init,
 
         mutex: @TypeOf(mutex_init) = mutex_init,
 
@@ -97,8 +108,10 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
         /// If `config.enable_memory_limit` is true, `total_requested_bytes_init` is set to 0 and
         /// `requested_memory_limit_init` is set to the maximum value of `usize`.
         /// Otherwise, both variables are left uninitialized.
-        const total_requested_bytes_init = if (config.enable_memory_limit) @as(usize, 0) else {};
-        const requested_memory_limit_init = if (config.enable_memory_limit) @as(usize, math.maxInt(usize)) else {};
+        const total_requested_bytes_init =
+            if (config.enable_memory_limit) @as(usize, 0) else {};
+        const requested_memory_limit_init =
+            if (config.enable_memory_limit) @as(usize, math.maxInt(usize)) else {};
 
         /// This code defines a constant `mutex_init` based on the configuration options.
         /// If `config.MutexType` is provided, it returns an empty struct of that type.
@@ -146,19 +159,22 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
 
         /// Represents a large allocation with additional metadata.
         const LargeAlloc = struct {
-            bytes: []u8, // The allocated memory bytes.
-            requested_size: if (config.enable_memory_limit) usize else void, // The size of the allocation requested by the user.
-            stack_addresses: [trace_n][stack_n]usize, // Stack addresses for different trace kinds.
-            freed: if (config.retain_metadata) bool else void, // Indicates whether the allocation has been freed.
-            log2_ptr_align: if (config.never_unmap and config.retain_metadata) u8 else void, // Log2 of the pointer alignment.
-
-            const trace_n = if (config.retain_metadata) traces_per_slot else 1; // Number of traces per slot.
-
+            // The allocated memory bytes.
+            bytes: []u8,
+            // The size of the allocation requested by the user.
+            requested_size: if (config.enable_memory_limit) usize else void,
+            // Stack addresses for different trace kinds.
+            stack_addresses: [trace_n][stack_n]usize,
+            // Indicates whether the allocation has been freed.
+            freed: if (config.retain_metadata) bool else void,
+            // Log2 of the pointer alignment.
+            log2_ptr_align: if (config.never_unmap and config.retain_metadata) u8 else void,
+            // Number of traces per slot.
+            const trace_n = if (config.retain_metadata) traces_per_slot else 1;
             /// Dumps the stack trace for a given trace kind.
             fn dumpStackTrace(self: *LargeAlloc, trace_kind: TraceKind) void {
                 std.debug.dumpStackTrace(self.getStackTrace(trace_kind));
             }
-
             /// Retrieves the stack trace for a given trace kind.
             fn getStackTrace(self: *LargeAlloc, trace_kind: TraceKind) std.builtin.StackTrace {
                 assert(@intFromEnum(trace_kind) < trace_n);
@@ -172,7 +188,6 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                     .index = len,
                 };
             }
-
             /// Captures the stack trace for a given trace kind at a specific return address.
             fn captureStackTrace(self: *LargeAlloc, ret_addr: usize, trace_kind: TraceKind) void {
                 assert(@intFromEnum(trace_kind) < trace_n);
@@ -180,9 +195,9 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                 collectStackTrace(ret_addr, stack_addresses);
             }
         };
-        /// This file defines the `LargeAllocTable` and `SmallAllocTable` constants.
-        /// `LargeAllocTable` is an `AutoHashMapUnmanaged` that maps `usize` keys to `LargeAlloc` values.
-        /// `SmallAllocTable` is an `AutoHashMapUnmanaged` that maps `usize` keys to `SmallAlloc` values.
+
+        /// `LargeAllocTable` maps `usize` keys to `LargeAlloc` values.
+        /// `SmallAllocTable` maps `usize` keys to `SmallAlloc` values.
         const LargeAllocTable = std.AutoHashMapUnmanaged(usize, LargeAlloc);
         const SmallAllocTable = std.AutoHashMapUnmanaged(usize, SmallAlloc);
 
