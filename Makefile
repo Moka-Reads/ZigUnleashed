@@ -19,7 +19,8 @@ compile_ch04:
 compile_ch05:
 	cd ch05 && make compile_c && \
 	make compile_cpp && \
-	make compile_zig
+	make compile_zig && \
+	make compile_link
 
 compile_ch06:
 	cd ch06 && make compile_c && \

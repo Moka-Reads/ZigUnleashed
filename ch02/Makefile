@@ -3,7 +3,7 @@ RS_FILES = match_example.rs
 ZIG_EXE_FILES = while.zig while_inline1000.zig for.zig break_example.zig if_example.zig while_reg1000.zig if_else_example.zig nested_for.zig continue_example.zig switch_example.zig exercises/exercise2.zig exercises/exercise1.zig
 ZIG_TEST_FILES = data_types.zig
 
-CC = clang
+CC = zig cc
 RUSTC = rustc
 compile_c: 
 	$(foreach file, $(C_FILES), \

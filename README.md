@@ -68,11 +68,11 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 13                | 267           |
-| C++        | 1                 | 22            |
-| C          | 2                 | 43            |
+| Zig        | 13                | 268           |
 | Rust       | 1                 | 16            |
-| **Total**  | **17**            | **348**       |
+| C          | 2                 | 43            |
+| C++        | 1                 | 22            |
+| **Total**  | **17**            | **349**       |
 
 
 ## Chapter 4: Arrays and Slices
@@ -88,9 +88,9 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 10                | 232           |
 | C++        | 1                 | 31            |
 | C          | 3                 | 82            |
+| Zig        | 10                | 232           |
 | **Total**  | **14**            | **345**       |
 
 
@@ -98,17 +98,17 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 17                | 2448          |
+| Zig        | 17                | 2447          |
 | C          | 3                 | 53            |
-| **Total**  | **20**            | **2501**      |
+| **Total**  | **20**            | **2500**      |
 
 
 ## Chapter 9: Advance Topics
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Rust       | 2                 | 6             |
-| Zig        | 3                 | 99            |
 | C          | 1                 | 6             |
+| Zig        | 3                 | 99            |
+| Rust       | 2                 | 6             |
 | **Total**  | **6**             | **111**       |
 

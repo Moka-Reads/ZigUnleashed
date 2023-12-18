@@ -14,9 +14,10 @@ fn hash(str: []const u8) u64 {
     // initialize hash value at 5381
     var h: u64 = 5381;
     // loop through each character in the string
-    for (str) |_, char| {
+    for (str) |char| {
         // update the hash using the djb2 algorithm:
-        h = ((h << 5) + h) + @intCast(u64, char);
+        const c: u64 = @intCast(char);
+        h = ((h << 5) + h) + c;
     }
     // return the hash
     return h;

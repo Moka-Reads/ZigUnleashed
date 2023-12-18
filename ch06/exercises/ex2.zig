@@ -89,9 +89,8 @@ pub fn DoubleLinkedList(comptime T: type) type {
         }
         pub fn print(self: Self) void {
             var current = self.first;
-            while (current) |node| {
+            while (current) |node| : (current = node.next) {
                 std.debug.print("{} -> ", .{node.data});
-                current = node.next;
             }
             std.debug.print("null\n", .{});
         }

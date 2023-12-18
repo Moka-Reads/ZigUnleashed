@@ -5,3 +5,7 @@ makegen
 */*.o 
 */*.obj
 ch*/zig-cache
+./*/*.a 
+./*/exercises/*.o
+./*/exercises/*.a
+zig-cache
