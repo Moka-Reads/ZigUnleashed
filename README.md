@@ -11,7 +11,6 @@
 - [Chapter 04: Arrays and Slices](https://github.com/MKProj/ZigUnleashed/tree/main/ch04)  
 - [Chapter 05: Struct, Enums and Unions](https://github.com/MKProj/ZigUnleashed/tree/main/ch05)  
 - [Chapter 06: Pointers and Memory Management](https://github.com/MKProj/ZigUnleashed/tree/main/ch06)  
-- [Chapter 07: Error Handling](https://github.com/MKProj/ZigUnleashed/tree/main/ch07)  
 - [Chapter 09: Advance Topics](https://github.com/MKProj/ZigUnleashed/tree/main/ch09)  
 ---
 ## Software Requirements
