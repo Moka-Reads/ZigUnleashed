@@ -59,7 +59,7 @@ def is_zig_project(directory):
     return os.path.exists(build_zig_path)
 
 def count_lines(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(file_path, 'r', encoding='utf-8', newline='') as file:
         return len(file.readlines())
 
 def get_language(file_name):
