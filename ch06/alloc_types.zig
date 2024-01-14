@@ -7,7 +7,6 @@ test "page allocator" {
     const allocator = std.heap.page_allocator;
     const memory = try allocator.alloc(i32, 100);
     defer allocator.free(memory);
-
     try std.testing.expect(memory.len == 100);
     try std.testing.expect(@TypeOf(memory) == []i32);
 }
@@ -18,10 +17,8 @@ test "fixed buffer allocator" {
     var buffer: [1000]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
     const allocator = fba.allocator();
-
     const memory = try allocator.alloc(u32, 50);
     defer allocator.free(memory);
-
     try std.testing.expect(memory.len == 50);
     try std.testing.expect(@TypeOf(memory) == []u32);
 }

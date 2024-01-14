@@ -12,16 +12,13 @@ const StackTrace = std.builtin.StackTrace; // A type to represent the stack's tr
 
 /// Integer type for pointing to slots in a small allocation
 const SlotIndex = std.meta.Int(.unsigned, math.log2(page_size) + 1);
-
 /// The number of stack trace frames to include in the default test stack trace.
 const default_test_stack_trace_frames: usize = if (builtin.is_test) 8 else 4;
-
 /// The number of stack trace frames to include in the default system stack trace.
 const default_sys_stack_trace_frames: usize = if (std.debug.sys_can_stack_trace)
     default_test_stack_trace_frames
 else
     0;
-
 /// The number of stack trace frames to include in the default stack trace.
 const default_stack_trace_frames: usize = switch (builtin.mode) {
     .Debug => default_sys_stack_trace_frames,
@@ -140,7 +137,6 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
         const stack_n = config.stack_trace_frames;
         const one_trace_size = @sizeOf(usize) * stack_n;
         const traces_per_slot = 2;
-
         pub const Error = mem.Allocator.Error;
 
         /// Calculates the small bucket count based on the logarithm of the page size.
@@ -175,6 +171,7 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
             fn dumpStackTrace(self: *LargeAlloc, trace_kind: TraceKind) void {
                 std.debug.dumpStackTrace(self.getStackTrace(trace_kind));
             }
+
             /// Retrieves the stack trace for a given trace kind.
             fn getStackTrace(self: *LargeAlloc, trace_kind: TraceKind) std.builtin.StackTrace {
                 assert(@intFromEnum(trace_kind) < trace_n);
@@ -188,6 +185,7 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                     .index = len,
                 };
             }
+
             /// Captures the stack trace for a given trace kind at a specific return address.
             fn captureStackTrace(self: *LargeAlloc, ret_addr: usize, trace_kind: TraceKind) void {
                 assert(@intFromEnum(trace_kind) < trace_n);
@@ -245,8 +243,6 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                 slot_index: SlotIndex,
                 trace_kind: TraceKind,
             ) void {
-                // Initialize them to 0. When determining the count we must look
-                // for non zero addresses.
                 const stack_addresses = bucket.stackTracePtr(size_class, slot_index, trace_kind);
                 collectStackTrace(ret_addr, stack_addresses);
             }
@@ -385,6 +381,7 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                         break;
                 }
             }
+
             var it = self.large_allocations.valueIterator();
             while (it.next()) |large_alloc| {
                 if (config.retain_metadata and large_alloc.freed) continue;
