@@ -11,6 +11,7 @@
 - [Chapter 04: Arrays and Slices](https://github.com/MKProj/ZigUnleashed/tree/main/ch04)  
 - [Chapter 05: Struct, Enums and Unions](https://github.com/MKProj/ZigUnleashed/tree/main/ch05)  
 - [Chapter 06: Pointers and Memory Management](https://github.com/MKProj/ZigUnleashed/tree/main/ch06)  
+- [Chapter 08: Interfacing with C](https://github.com/MKProj/ZigUnleashed/tree/main/ch08)  
 - [Chapter 09: Advance Topics](https://github.com/MKProj/ZigUnleashed/tree/main/ch09)  
 ---
 ## Software Requirements
@@ -98,9 +99,18 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 16                | 2255          |
-| C          | 3                 | 51            |
-| **Total**  | **19**            | **2306**      |
+| Zig        | 19                | 2647          |
+| C          | 9                 | 102           |
+| **Total**  | **28**            | **2749**      |
+
+
+## Chapter 8: Interfacing with C
+
+| Language   | Number of Files   | Total Lines   |
+|:-----------|:------------------|:--------------|
+| Zig        | 4                 | 22062         |
+| C          | 4                 | 258           |
+| **Total**  | **8**             | **22320**     |
 
 
 ## Chapter 9: Advance Topics
