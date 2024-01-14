@@ -98,9 +98,9 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 17                | 2447          |
-| C          | 3                 | 53            |
-| **Total**  | **20**            | **2500**      |
+| Zig        | 16                | 2255          |
+| C          | 3                 | 51            |
+| **Total**  | **19**            | **2306**      |
 
 
 ## Chapter 9: Advance Topics
