@@ -10,7 +10,7 @@ pub fn main() !void {
     // create inlined while loop
     inline while (i < 1000) : (i += 1) {
         // do something
-        const a = @intCast(usize, i) * 8 + 43;
+        const a: usize = @as(usize, i) * 8 + 43;
         const b = a % 56;
         dummy += b;
     }

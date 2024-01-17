@@ -8,7 +8,7 @@ pub fn main() !void {
     var dummy: usize = 1;
     while (i < 1000) : (i += 1) {
         // do something
-        const a = @intCast(usize, i) * 8 + 43;
+        const a = @as(usize, i) * 8 + 43;
         const b = a % 56;
         dummy += b;
     }
