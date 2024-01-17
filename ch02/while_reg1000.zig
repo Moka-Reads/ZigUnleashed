@@ -4,17 +4,16 @@ const Insant = std.time.Instant;
 pub fn main() !void {
     // get the current time
     const now = try Insant.now();
-    var i: i32 = 0;
+    var i: usize = 0;
     var dummy: usize = 1;
     while (i < 1000) : (i += 1) {
         // do something
-        const a = @as(usize, i) * 8 + 43;
-        const b = a % 56;
+        const a: usize = i * 8 + 43;
+        const b: usize = a % 56;
         dummy += b;
     }
     // get the time we finished
     const finished = try Insant.now();
     // print the time elapsed
-    print("Time Elapsed (regular): {}ns", 
-        .{finished.since(now)});
+    print("Time Elapsed (regular): {}ns", .{finished.since(now)});
 }

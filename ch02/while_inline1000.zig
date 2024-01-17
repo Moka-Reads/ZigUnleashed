@@ -5,12 +5,12 @@ pub fn main() !void {
     // get the current time
     const now = try Insant.now();
     // i must be known in comptime
-    comptime var i: i32 = 0;
+    comptime var i: usize = 0;
     var dummy: usize = 1;
     // create inlined while loop
     inline while (i < 1000) : (i += 1) {
         // do something
-        const a: usize = @as(usize, i) * 8 + 43;
+        const a: usize = i * 8 + 43;
         const b = a % 56;
         dummy += b;
     }
