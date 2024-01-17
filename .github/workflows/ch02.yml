@@ -1,0 +1,53 @@
+name: Chapter 02
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.11.0
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Build Zig
+        run: |
+            zig build-exe ch02/while.zig
+            zig build-exe ch02/while_inline1000.zig 
+            zig build-exe ch02/for.zig 
+            zig build-exe ch02/break_example.zig 
+            zig build-exe ch02/if_example.zig 
+            zig build-exe ch02/while_reg1000.zig 
+            zig build-exe ch02/if_else_example.zig 
+            zig build-exe ch02/nested_for.zig 
+            zig build-exe ch02/continue_example.zig 
+            zig build-exe ch02/switch_example.zig 
+            zig build-exe ch02/exercises/exercise2.zig 
+            zig build-exe ch02/exercises/exercise1.zig
+            cd ch02/our_lib && zig build 
+      - name: Test Zig
+        run: | 
+            zig test ch02/data_types.zig
+      - name: Build C 
+        run: zig cc ch02/switch_example.c 
+      - name: Run Rust 
+        run: rustc ch02/match_example.rs

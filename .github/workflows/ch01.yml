@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     strategy:
       matrix:
         os:

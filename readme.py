@@ -111,10 +111,12 @@ def list_files_in_directory(directory, language_files):
 
 
 
-def process_ch_directories(base_directory):
+def process_ch_directories():
     ch_pattern = re.compile(r'ch(\d+)')
 
     overall_language_files = {}  # Dictionary to store overall file counts and line counts for each language
+    total_files = 0
+    total_lines = 0
 
     # Initialize chapter_section before the loop
     chapter_section = "\n\n# Statistics per Chapter\n\n"
@@ -153,6 +155,10 @@ def process_ch_directories(base_directory):
                 # Add chapter table to the section
                 chapter_section += tabulate(chapter_table_data, headers=chapter_table_headers, tablefmt="pipe", showindex=False)
                 chapter_section += "\n\n"
+
+                # Accumulate chapter statistics to total counts
+                total_files += chapter_total_files
+                total_lines += chapter_total_lines
 
     # Set up colors for each language
     language_colors = {
