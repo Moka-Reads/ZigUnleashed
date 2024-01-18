@@ -1,22 +1,17 @@
 const std = @import("std");
 
-const Number = enum(u8){
-    Zero, 
-    One, 
-    Two, 
-    _
-};
+const Number = enum(u8) { Zero, One, Two, _ };
 
-pub fn main() !void{
+pub fn main() !void {
     var num = Number.Zero;
-    std.debug.print("{any} => {d}\n", .{num, @enumToInt(num)});
+    std.debug.print("{any} => {d}\n", .{ num, @intFromEnum(num) });
     // Increment to One
-    num = @intToEnum(Number, @enumToInt(num) + 1);
-    std.debug.print("{any} => {d}\n", .{num, @enumToInt(num)});
+    num = @enumFromInt(@intFromEnum(num) + 1);
+    std.debug.print("{any} => {d}\n", .{ num, @intFromEnum(num) });
     // Increment to Two
-    num = @intToEnum(Number, @enumToInt(num) + 1);
-    std.debug.print("{any} => {d}\n", .{num, @enumToInt(num)});
+    num = @enumFromInt(@intFromEnum(num) + 1);
+    std.debug.print("{any} => {d}\n", .{ num, @intFromEnum(num) });
 
-    num = @intToEnum(Number, @enumToInt(num) + 1);
-    std.debug.print("{any} => {d}\n", .{num, @enumToInt(num)});
+    num = @enumFromInt(@intFromEnum(num) + 1);
+    std.debug.print("{any} => {d}\n", .{ num, @intFromEnum(num) });
 }
