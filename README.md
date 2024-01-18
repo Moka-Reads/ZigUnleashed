@@ -90,10 +90,10 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 10                | 232           |
+| Zig        | 10                | 227           |
 | C++        | 1                 | 31            |
 | C          | 3                 | 82            |
-| **Total**  | **14**            | **345**       |
+| **Total**  | **14**            | **340**       |
 
 
 ## Chapter 6: Pointers and Memory Management
