@@ -6,7 +6,8 @@ fn average(args: anytype) f64 {
     inline for (args) |arg| {
         sum += @as(f64, arg);
     }
-    return sum / @intToFloat(f64, args.len);
+    const len: f64 = @floatFromInt(args.len);
+    return sum / len;
 }
 
 pub fn main() !void {
