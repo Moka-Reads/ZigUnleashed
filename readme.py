@@ -214,6 +214,6 @@ if __name__ == "__main__":
     base_directory = "."
 
     if os.path.exists(base_directory):
-        process_ch_directories(base_directory)
+        process_ch_directories()
     else:
         print("Base directory not found.")

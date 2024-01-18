@@ -5,6 +5,7 @@ const fs = std.fs;
 // Retrieve standard input reader and standard output writer
 const stdin = io.getStdIn().reader();
 const stdout = io.getStdOut().writer();
+const FixedBufferStreamer = io.FixedBufferStream([]u8);
 
 // File path to save user input
 const PATH = "user_manifesto.txt";
@@ -15,21 +16,16 @@ pub fn main() !void {
 
     // Buffer to store user input
     var buffer: [255]u8 = undefined;
+    var streamer = FixedBufferStreamer{ .pos = 0, .buffer = &buffer };
+    try stdin.streamUntilDelimiter(streamer.writer(), '\n', null);
+    // Create the file for writing, truncating any existing content
+    var file = try fs.cwd().createFile(PATH, .{ .read = true, .truncate = true });
+    defer file.close();
 
-    // Read user input until a newline character is encountered
-    if (try stdin.readUntilDelimiterOrEof(buffer[0..], '\n')) |user_input| {
-        // Create the file for writing, truncating any existing content
-        var file = try fs.cwd().createFile(PATH, .{ .read = true, .truncate = true });
-        defer file.close();
+    // Write the user input to the file
+    // ignore the bytes returned by the function
+    _ = try fs.File.write(file, streamer.buffer[0..streamer.pos]);
 
-        // Write the user input to the file
-        // ignore the bytes returned by the function
-        _ = try fs.File.write(file, user_input);
-
-        // Print success message
-        try stdout.print("Successfully saved!", .{});
-    } else {
-        // Failed to read user input
-        try stdout.print("Failed to read user input!", .{});
-    }
+    // Print success message
+    try stdout.print("Successfully saved!", .{});
 }
