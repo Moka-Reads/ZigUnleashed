@@ -1,0 +1,45 @@
+name: Chapter 05
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.11.0
+      - name: Build Zig
+        run: |
+            zig build-exe ch05/packed.zig
+            zig build-exe ch05/point.zig
+            zig build-exe ch05/person.zig
+            zig build-exe ch05/union_undef.zig
+            zig build-exe ch05/struct_intro.zig
+            zig build-exe ch05/number.zig
+            zig build-exe ch05/status.zig
+            zig build-exe ch05/status_expanded.zig
+      - name: Test Zig
+        run: | 
+            zig test ch05/tagged_union.zig      
+      - name: Build C/C++
+        run: |
+            zig cc ch05/link_extern.c  
+            zig cc ch05/number.c  
+            zig cc ch05/union_undef.c
+            zig c++ ch05/methods.cpp
