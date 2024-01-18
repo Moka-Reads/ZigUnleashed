@@ -70,11 +70,11 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 13                | 268           |
+| Zig        | 13                | 269           |
 | C++        | 1                 | 22            |
 | C          | 2                 | 43            |
 | Rust       | 1                 | 16            |
-| **Total**  | **17**            | **349**       |
+| **Total**  | **17**            | **350**       |
 
 
 ## Chapter 4: Arrays and Slices
