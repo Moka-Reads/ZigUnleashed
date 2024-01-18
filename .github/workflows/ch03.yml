@@ -1,0 +1,54 @@
+name: Chapter 03
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.11.0
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Build Zig
+        run: |
+            zig build-exe ch03/max.zig
+            zig build-exe ch03/vis.zig
+            zig build-exe ch03/anytype_mult.zig
+            zig build-exe ch03/variadic.zig
+            zig build-exe ch03/fn_ptr.zig
+            zig build-exe ch03/add.zig
+            zig build-exe ch03/swap.zig
+            zig build-exe ch03/hash.zig        
+      - name: Test Zig
+        run: | 
+            zig test ch03/fib.zig
+            zig test ch03/exercises/exercise1.zig
+            zig test ch03/exercises/exercise2.zig
+            zig test ch03/exercises/exercise3.zig        
+      - name: Build C/C++
+        run: |
+            zig cc ch03/swap.c 
+            zig cc ch03/variadic.c
+            zig c++ ch03/max.cpp
+      - name: Run Rust 
+        run: rustc ch03/fn_ptr.rs
