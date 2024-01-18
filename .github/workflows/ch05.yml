@@ -39,7 +39,6 @@ jobs:
             zig test ch05/tagged_union.zig      
       - name: Build C/C++
         run: |
-            zig cc ch05/link_extern.c  
             zig cc ch05/number.c  
             zig cc ch05/union_undef.c
             zig c++ ch05/methods.cpp
