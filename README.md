@@ -81,8 +81,8 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 25                | 454           |
 | C          | 3                 | 123           |
+| Zig        | 25                | 454           |
 | **Total**  | **28**            | **577**       |
 
 
@@ -91,8 +91,8 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
 | Zig        | 10                | 227           |
-| C++        | 1                 | 31            |
 | C          | 3                 | 82            |
+| C++        | 1                 | 31            |
 | **Total**  | **14**            | **340**       |
 
 
@@ -100,18 +100,18 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 19                | 2647          |
-| C          | 9                 | 102           |
-| **Total**  | **28**            | **2749**      |
+| C          | 9                 | 93            |
+| Zig        | 17                | 2135          |
+| **Total**  | **26**            | **2228**      |
 
 
 ## Chapter 7: Error Handling
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| C++        | 1                 | 13            |
-| Rust       | 1                 | 26            |
 | C          | 1                 | 15            |
+| Rust       | 1                 | 26            |
+| C++        | 1                 | 13            |
 | Zig        | 1                 | 21            |
 | **Total**  | **4**             | **75**        |
 
@@ -129,8 +129,8 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
+| C          | 1                 | 6             |
 | Rust       | 2                 | 6             |
 | Zig        | 3                 | 99            |
-| C          | 1                 | 6             |
 | **Total**  | **6**             | **111**       |
 
