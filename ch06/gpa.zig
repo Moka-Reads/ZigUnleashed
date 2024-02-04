@@ -723,9 +723,7 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                         if (searchBucket(self.empty_buckets, @intFromPtr(old_mem.ptr))) |bucket| {
                             // bucket is empty so is_used below will always be false and we exit there
                             break :blk bucket;
-                        } else {
-                            @panic("Invalid free");
-                        }
+                        } else @panic("Invalid free");
                     }
                 }
                 return self.resizeLarge(old_mem, log2_old_align, new_size, ret_addr);
@@ -740,15 +738,12 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                 if (config.safety) {
                     reportDoubleFree(ret_addr, bucketStackTrace(bucket, size_class, slot_index, .alloc), bucketStackTrace(bucket, size_class, slot_index, .free));
                     @panic("Unrecoverable double free");
-                } else {
-                    unreachable;
-                }
+                } else unreachable;
             }
 
             // Definitely an in-use small alloc now.
             if (config.safety) {
-                const entry = self.small_allocations.getEntry(@intFromPtr(old_mem.ptr)) orelse
-                    @panic("Invalid free");
+                const entry = self.small_allocations.getEntry(@intFromPtr(old_mem.ptr)) orelse @panic("Invalid free");
                 if (old_mem.len != entry.value_ptr.requested_size or log2_old_align != entry.value_ptr.log2_ptr_align) {
                     var addresses: [stack_n]usize = [1]usize{0} ** stack_n;
                     var free_stack_trace = StackTrace{
@@ -774,6 +769,7 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
                     }
                 }
             }
+
             const prev_req_bytes = self.total_requested_bytes;
             if (config.enable_memory_limit) {
                 const new_req_bytes = prev_req_bytes + new_size - old_mem.len;
