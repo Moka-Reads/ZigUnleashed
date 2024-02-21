@@ -12,10 +12,9 @@ fn divide(a: f32, b: f32) MathError!f32 {
 }
 
 pub fn main() !void {
-    // Use `catch` to have default values
-    // Similar to `unwrap_or_default()` in Rust
-    // `expr() !T => = expr() catch val;`
-    const result = divide(3.2, 0.0) catch -1.0;
-    // `try` is shortcut to `expr() catch |err| return err;`
+    const result = divide(3.2, 0.0) catch |e| {
+        std.debug.print("Error: {}\n", .{e});
+        return;
+    };
     std.debug.print("Result: {d}\n", .{result});
 }

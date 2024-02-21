@@ -1,13 +1,18 @@
 #include <iostream>
-using namespace std;
+
+void divide(int a, int b) {
+    if (b == 0) {
+        throw std::runtime_error("Division by zero");
+    }
+    int result = a / b;
+    std::cout << "Result: " << result << std::endl;
+}
+
 int main() {
     try {
-        // Code that may throw an exception
-        throw runtime_error("An error occurred");
-    } catch (const exception& e) {
-        // Handle the exception
-        cout << "Exception caught: " << e.what() << endl;
+        divide(10, 0);
+    } catch (const std::exception& e) {
+        std::cout << "Exception caught: " << e.what() << std::endl;
     }
-
     return 0;
 }
