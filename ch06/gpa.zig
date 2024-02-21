@@ -856,17 +856,12 @@ pub fn GeneralPurposeAllocator(comptime config: Config) type {
             if (!is_used) {
                 if (config.safety) {
                     reportDoubleFree(ret_addr, bucketStackTrace(bucket, size_class, slot_index, .alloc), bucketStackTrace(bucket, size_class, slot_index, .free));
-                    // Recoverable if this is a free.
                     return;
-                } else {
-                    unreachable;
-                }
+                } else unreachable;
             }
 
-            // Definitely an in-use small alloc now.
             if (config.safety) {
-                const entry = self.small_allocations.getEntry(@intFromPtr(old_mem.ptr)) orelse
-                    @panic("Invalid free");
+                const entry = self.small_allocations.getEntry(@intFromPtr(old_mem.ptr)) orelse @panic("Invalid free");
                 if (old_mem.len != entry.value_ptr.requested_size or log2_old_align != entry.value_ptr.log2_ptr_align) {
                     var addresses: [stack_n]usize = [1]usize{0} ** stack_n;
                     var free_stack_trace = StackTrace{
