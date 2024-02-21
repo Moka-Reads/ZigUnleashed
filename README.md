@@ -71,9 +71,9 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
 | Zig        | 13                | 269           |
-| C++        | 1                 | 22            |
 | C          | 2                 | 43            |
 | Rust       | 1                 | 16            |
+| C++        | 1                 | 22            |
 | **Total**  | **17**            | **350**       |
 
 
@@ -81,8 +81,8 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| C          | 3                 | 123           |
 | Zig        | 25                | 454           |
+| C          | 3                 | 123           |
 | **Total**  | **28**            | **577**       |
 
 
@@ -100,8 +100,8 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| C          | 9                 | 93            |
 | Zig        | 17                | 2131          |
+| C          | 9                 | 93            |
 | **Total**  | **26**            | **2224**      |
 
 
@@ -109,19 +109,18 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| C          | 1                 | 15            |
-| Rust       | 1                 | 26            |
-| C++        | 1                 | 13            |
-| Zig        | 1                 | 21            |
-| **Total**  | **4**             | **75**        |
+| C++        | 1                 | 18            |
+| Zig        | 1                 | 20            |
+| Rust       | 1                 | 21            |
+| **Total**  | **3**             | **59**        |
 
 
 ## Chapter 8: Interfacing with C
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| Zig        | 4                 | 22062         |
 | C          | 4                 | 258           |
+| Zig        | 4                 | 22062         |
 | **Total**  | **8**             | **22320**     |
 
 
@@ -129,8 +128,8 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
-| C          | 1                 | 6             |
 | Rust       | 2                 | 6             |
+| C          | 1                 | 6             |
 | Zig        | 3                 | 99            |
 | **Total**  | **6**             | **111**       |
 
