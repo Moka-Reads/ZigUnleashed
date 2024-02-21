@@ -101,8 +101,8 @@ Rust target: `rustup target add armv7-unknown-linux-gnueabihf`
 | Language   | Number of Files   | Total Lines   |
 |:-----------|:------------------|:--------------|
 | C          | 9                 | 93            |
-| Zig        | 17                | 2135          |
-| **Total**  | **26**            | **2228**      |
+| Zig        | 17                | 2131          |
+| **Total**  | **26**            | **2224**      |
 
 
 ## Chapter 7: Error Handling
